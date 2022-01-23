@@ -5,13 +5,13 @@ import 'package:flutter/rendering.dart';
 import 'package:silver_app_bar1/item_widget.dart';
 import 'package:silver_app_bar1/model.dart';
 
-class SilverPage2 extends StatefulWidget {
+class SilverPage1 extends StatefulWidget {
 
   @override
-  _SilverPage2State createState() => _SilverPage2State();
+  _SilverPage1State createState() => _SilverPage1State();
 }
 
-class _SilverPage2State extends State<SilverPage2> {
+class _SilverPage1State extends State<SilverPage1> {
   List<ModelInfo> list = [];
 
   bool showGridList = false;
