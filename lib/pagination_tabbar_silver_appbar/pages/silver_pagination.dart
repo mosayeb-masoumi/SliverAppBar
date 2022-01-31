@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:silver_app_bar1/model.dart';
+
 import 'package:silver_app_bar1/pagination_tabbar_silver_appbar/model/user_model.dart';
 import 'package:silver_app_bar1/pagination_tabbar_silver_appbar/pages/user_item.dart';
 import 'package:silver_app_bar1/pagination_tabbar_silver_appbar/repository/my_repository.dart';
@@ -163,6 +163,7 @@ class _SilverPaginationState extends State<SilverPagination> {
 
                 // physics:  AlwaysScrollableScrollPhysics(),
                 physics: NeverScrollableScrollPhysics(),
+
                 pagingController: _pagingController,
                 builderDelegate: PagedChildBuilderDelegate<UserModel>(
                   animateTransitions: true,

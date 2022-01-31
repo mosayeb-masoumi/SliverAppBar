@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:silver_app_bar1/pagination_tabbar_silver_appbar/pages/silver_pagination.dart';
-import 'package:silver_app_bar1/silver_page1.dart';
-import 'package:silver_app_bar1/silver_page2.dart';
-import 'package:silver_app_bar1/silver_page3.dart';
+import 'package:silver_app_bar1/simple_tabbar/silver_page1.dart';
+import 'package:silver_app_bar1/video_silver2/pages/video_list2.dart';
+import 'video_tabbar_silver_appbar/pages/video_list.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,7 +16,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: ListView(
         children: [
-          RaisedButton(child: Text("btn1"), onPressed: () {
+
+          SizedBox(height: 20,),
+          RaisedButton(child: Text("simple tabbar silver appbar"), onPressed: () {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => SilverPage1()),
@@ -24,24 +27,6 @@ class _HomePageState extends State<HomePage> {
 
           SizedBox(height: 10,),
 
-          RaisedButton(child: Text("btn2"), onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SilverPage2()),
-            );
-          }),
-
-          SizedBox(height: 10,),
-
-          RaisedButton(child: Text("btn3"), onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SilverPage3()),
-            );
-          }),
-
-
-          SizedBox(height: 10,),
 
           RaisedButton(child: Text("SilverPagination"), onPressed: () {
             Navigator.push(
@@ -51,6 +36,22 @@ class _HomePageState extends State<HomePage> {
           }),
 
 
+          SizedBox(height: 10,),
+
+          RaisedButton(child: Text("VideoSilverPagination"), onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => VideoList()),
+            );
+          }),
+
+          SizedBox(height: 10,),
+          RaisedButton(child: Text("VideoSilverPagination2"), onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => VideoList2()),
+            );
+          }),
 
         ],
       ),
