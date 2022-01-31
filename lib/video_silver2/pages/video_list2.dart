@@ -3,9 +3,10 @@ import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:silver_app_bar1/video_silver2/model/video_model_item2.dart';
 import 'package:silver_app_bar1/video_silver2/pages/video_item2.dart';
-import 'package:silver_app_bar1/video_tabbar_silver_appbar/model/video_model.dart';
-import 'package:silver_app_bar1/video_tabbar_silver_appbar/repository/video_repository.dart';
+import 'package:silver_app_bar1/video_silver2/repository2/video_repository2.dart';
+
 
 class VideoList2 extends StatefulWidget {
   @override
@@ -21,7 +22,7 @@ class _VideoList2State extends State<VideoList2> {
 
   // pagination
   static const _pageSize = 8;
-  final PagingController<int, VideoModel> _pagingController =
+  final PagingController<int, VideoModelItem2> _pagingController =
   PagingController(firstPageKey: 0);
 
   @override
@@ -37,8 +38,8 @@ class _VideoList2State extends State<VideoList2> {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      final model = await VideoRepository().fetchVideoList(pageKey, _pageSize);
-      final newItems = model.videoList;
+      final model = await VideoRepository2().fetchVideoList(pageKey, _pageSize);
+      final newItems = model.videoList2;
 
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
@@ -141,32 +142,20 @@ class _VideoList2State extends State<VideoList2> {
 
           body: TabBarView(
             children: [
+
               //first tab
-              PagedListView<int, VideoModel>.separated(
+              PagedListView<int, VideoModelItem2>.separated(
 
                 // physics:  AlwaysScrollableScrollPhysics(),
                 physics: NeverScrollableScrollPhysics(),
-
                 pagingController: _pagingController,
-                builderDelegate: PagedChildBuilderDelegate<VideoModel>(
+                builderDelegate: PagedChildBuilderDelegate<VideoModelItem2>(
                   animateTransitions: true,
-                  itemBuilder: (context, videoModelItem, index) =>
-                      GestureDetector(
-                        child: VideoItem2(videoModelItem: videoModelItem, betterPlayerController: betterPlayerController,index: index , showVideo: indexPlayer == index ? true : false,),
-                           onTap: (){
-                             setState(() {
-                               indexPlayer = index;
-                               _freeController();
-                               _setupController(videoModelItem);
-                             });
-                           },
-
-                      ),
-
+                  itemBuilder: (context, videoListData, index) =>
+                      VideoItem2(videoListData: videoListData,),
                 ),
                 separatorBuilder: (context, index) => const Divider(),
               ),
-
 
 
               // second tab
@@ -184,61 +173,5 @@ class _VideoList2State extends State<VideoList2> {
   }
 
 
-
-
-
-
-
-
-  void _freeController() {
-    if (betterPlayerController != null) {
-      betterPlayerController.pause();
-      betterPlayerController.dispose();
-      //  _initialized = false;
-    }
-  }
-
-  void _setupController(VideoModel videoModel) {
-    BetterPlayerConfiguration betterPlayerConfiguration =
-    BetterPlayerConfiguration(
-        aspectRatio: 16 / 9,
-        fit: BoxFit.contain,
-        autoDispose: false,
-        autoPlay: true,
-        showPlaceholderUntilPlay: true,
-        looping: false,
-
-        controlsConfiguration: BetterPlayerControlsConfiguration(
-            controlBarColor: Colors.black.withAlpha(600),
-            controlBarHeight: 30,
-            overflowModalColor: Colors.yellow,
-            overflowModalTextColor: Colors.white,
-            overflowMenuIconsColor: Colors.white,
-            enableSkips: false,
-            // playIcon: const AssetImage("assets/images/play_icon.png"),
-
-
-            enablePlayPause: false
-        ));
-    BetterPlayerDataSource? _betterPlayerDataSource = BetterPlayerDataSource(
-        BetterPlayerDataSourceType.network, videoModel.videoUrl,
-        placeholder: _buildVideoPlaceholder(videoModel.cover),
-        cacheConfiguration: const BetterPlayerCacheConfiguration(useCache: false));
-
-    betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
-    betterPlayerController.setupDataSource(_betterPlayerDataSource);
-
-  }
-
-  Widget _buildVideoPlaceholder(String cover) {
-    return Image.network(cover , fit: BoxFit.cover);
-  }
-
-
-  @override
-  void dispose() {
-    _freeController();
-    super.dispose();
-  }
 
 }

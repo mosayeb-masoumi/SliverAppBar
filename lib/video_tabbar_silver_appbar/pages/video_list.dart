@@ -237,7 +237,8 @@ class _VideoListState extends State<VideoList> {
         BetterPlayerDataSourceType.network, videoModel.videoUrl,
         placeholder: _buildVideoPlaceholder(videoModel.cover),
 
-        cacheConfiguration: const BetterPlayerCacheConfiguration(useCache: false));
+        cacheConfiguration: const BetterPlayerCacheConfiguration(useCache: false)
+    );
 
     betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
     betterPlayerController.setupDataSource(_betterPlayerDataSource);
