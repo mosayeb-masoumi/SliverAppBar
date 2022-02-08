@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import 'package:silver_app_bar1/pagination_tabbar_silver_appbar/model/user_model.dart';
+import 'package:silver_app_bar1/pagination_tabbar_silver_appbar/pages/silver_pagination.dart';
 import 'package:silver_app_bar1/pagination_tabbar_silver_appbar/pages/user_item.dart';
 import 'package:silver_app_bar1/pagination_tabbar_silver_appbar/repository/my_repository.dart';
 import 'package:silver_app_bar1/video_tabbar_silver_appbar/model/video_model.dart';
@@ -17,30 +18,55 @@ class VideoList extends StatefulWidget {
   _VideoListState createState() => _VideoListState();
 }
 
-class _VideoListState extends State<VideoList> {
+class _VideoListState extends State<VideoList> with SingleTickerProviderStateMixin {
 
+  late TabController _tabController;
 
-  late BetterPlayerController betterPlayerController ;
+  late BetterPlayerController betterPlayerController;
+
   int indexPlayer = -1;
-
 
   // pagination
   static const _pageSize = 8;
-  final PagingController<int, VideoModel> _pagingController =
-  PagingController(firstPageKey: 0);
+  final PagingController<int, VideoModel> _pagingController = PagingController(firstPageKey: 0);
 
   @override
   void initState() {
-
-    betterPlayerController = BetterPlayerController(BetterPlayerConfiguration());
+    betterPlayerController =
+        BetterPlayerController(BetterPlayerConfiguration());
 
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
     });
     super.initState();
+
+    _tabController = TabController(vsync: this, length: 2);
+    _tabController.addListener(_handleTabSelection);
   }
 
+
+  void _handleTabSelection() {
+    if (_tabController.indexIsChanging) {
+      switch (_tabController.index) {
+        case 0:
+
+          int a  = 5;
+          break;
+        case 1:
+          int g = 5;
+          break;
+      }
+    }
+  }
+
+
+
+
+
+
+
   Future<void> _fetchPage(int pageKey) async {
+    // if(pageKey<2){
     try {
       final model = await VideoRepository().fetchVideoList(pageKey, _pageSize);
       final newItems = model.videoList;
@@ -55,6 +81,7 @@ class _VideoListState extends State<VideoList> {
     } catch (error) {
       _pagingController.error = error;
     }
+    // }
   }
 
   @override
@@ -114,14 +141,11 @@ class _VideoListState extends State<VideoList> {
                             Text("hdsfhuihkjhsdflkhaiuwerfi8wqeyhifhasifdhl")
                           ],
                         ),
-
                       ],
-
-
                     ),
                   ),
 
-                 //Images.network
+                  //Images.network
                 ),
 
                 bottom: PreferredSize(
@@ -129,6 +153,7 @@ class _VideoListState extends State<VideoList> {
                   child: Container(
                     color: Colors.blueGrey,
                     child: TabBar(
+                      controller: _tabController,
                       indicatorColor: Colors.yellow,
                       labelColor: Colors.yellow,
                       unselectedLabelColor: Colors.red,
@@ -142,43 +167,43 @@ class _VideoListState extends State<VideoList> {
               ),
             ];
           },
-
-
           body: TabBarView(
+            controller: _tabController,
             children: [
               //first tab
               PagedListView<int, VideoModel>.separated(
-
                 // physics:  AlwaysScrollableScrollPhysics(),
                 physics: NeverScrollableScrollPhysics(),
 
                 pagingController: _pagingController,
                 builderDelegate: PagedChildBuilderDelegate<VideoModel>(
                   animateTransitions: true,
+
+                  newPageProgressIndicatorBuilder: (_) => NewItemIndicator(context),
+                  // newPageProgressIndicatorBuilder: (_) => CustomCircularProgress(context),
+
+                  // newPageProgressIndicatorBuilder: (_) => ScaffoldMessenger?.of(context).showSnackBar(SnackBar(content: Text('ر حال دانلود'),
                   itemBuilder: (context, videoModelItem, index) =>
                       // VideoItem(videoModelItem: videoModelItem, index: index),
                       GestureDetector(
-                          child: VideoItem(canbuild: indexPlayer == index ? true : false,betterPlayerController: betterPlayerController,videoModelItem: videoModelItem, index: index),
-
-                        onTap: (){
-                          // if(indexPlayer==-1||(betterPlayerController.isVideoInitialized()??false) ){
-                            setState(() {
-                                indexPlayer = index;
-                                _freeController();
-                                _setupController(videoModelItem);
-                            });
-                          // };
-                        },
-                      ),
-
-
+                    child: VideoItem(
+                        canbuild: indexPlayer == index ? true : false,
+                        betterPlayerController: betterPlayerController,
+                        videoModelItem: videoModelItem,
+                        index: index),
+                    onTap: () {
+                      // if(indexPlayer==-1||(betterPlayerController.isVideoInitialized()??false) ){
+                      setState(() {
+                        indexPlayer = index;
+                        _freeController();
+                        _setupController(videoModelItem);
+                      });
+                      // };
+                    },
+                  ),
                 ),
                 separatorBuilder: (context, index) => const Divider(),
               ),
-
-
-
-
 
               // second tab
               Container(
@@ -194,15 +219,6 @@ class _VideoListState extends State<VideoList> {
     );
   }
 
-
-
-
-
-
-
-
-
-
   void _freeController() {
     if (betterPlayerController != null) {
       betterPlayerController.pause();
@@ -213,70 +229,77 @@ class _VideoListState extends State<VideoList> {
 
   void _setupController(VideoModel videoModel) {
     BetterPlayerConfiguration betterPlayerConfiguration =
-    BetterPlayerConfiguration(
-        aspectRatio: 16 / 9,
-        fit: BoxFit.contain,
-        autoDispose: false,
-        autoPlay: true,
-        showPlaceholderUntilPlay: true,
-        looping: false,
+        BetterPlayerConfiguration(
+            aspectRatio: 16 / 9,
+            fit: BoxFit.contain,
+            autoDispose: false,
+            autoPlay: true,
+            showPlaceholderUntilPlay: true,
+            looping: false,
+            controlsConfiguration: BetterPlayerControlsConfiguration(
+                controlBarColor: Colors.black.withAlpha(600),
+                controlBarHeight: 30,
+                overflowModalColor: Colors.yellow,
+                overflowModalTextColor: Colors.white,
+                overflowMenuIconsColor: Colors.white,
+                enableSkips: false,
+                // playIcon: const AssetImage("assets/images/play_icon.png"),
 
-        controlsConfiguration: BetterPlayerControlsConfiguration(
-            controlBarColor: Colors.black.withAlpha(600),
-            controlBarHeight: 30,
-            overflowModalColor: Colors.yellow,
-            overflowModalTextColor: Colors.white,
-            overflowMenuIconsColor: Colors.white,
-            enableSkips: false,
-            // playIcon: const AssetImage("assets/images/play_icon.png"),
-
-
-            enablePlayPause: false
-        ));
+                enablePlayPause: false));
     BetterPlayerDataSource? _betterPlayerDataSource = BetterPlayerDataSource(
         BetterPlayerDataSourceType.network, videoModel.videoUrl,
         placeholder: _buildVideoPlaceholder(videoModel.cover),
-
-        cacheConfiguration: const BetterPlayerCacheConfiguration(useCache: false)
-    );
+        cacheConfiguration:
+            const BetterPlayerCacheConfiguration(useCache: false));
 
     betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
     betterPlayerController.setupDataSource(_betterPlayerDataSource);
 
-
     // betterPlayerController.addEventsListener((event) {
-      /*   print("***********************************"+betterPlayerController.betterPlayerAsmsTrack!.height.toString());
+    /*   print("***********************************"+betterPlayerController.betterPlayerAsmsTrack!.height.toString());
 
       print("Better player event: ${event.betterPlayerEventType}");
 */
-      // if (event.betterPlayerEventType == BetterPlayerEventType.play) {
-      //   _setPlaceholderVisibleState(false);
-      // }
+    // if (event.betterPlayerEventType == BetterPlayerEventType.play) {
+    //   _setPlaceholderVisibleState(false);
+    // }
 
-
-      // if (event.betterPlayerEventType == BetterPlayerEventType.openFullscreen) {
-      //   var weight = MediaQuery.of(context).size.width;
-      //   var height = (weight * 9) / 16;
-      //   _scrollController.animateTo(
-      //     (height + 95) * indexPlayer + 40 * (indexPlayer)+10,
-      //     duration: Duration(milliseconds: 100),
-      //     curve: Curves.fastOutSlowIn,
-      //   );
-      // }
+    // if (event.betterPlayerEventType == BetterPlayerEventType.openFullscreen) {
+    //   var weight = MediaQuery.of(context).size.width;
+    //   var height = (weight * 9) / 16;
+    //   _scrollController.animateTo(
+    //     (height + 95) * indexPlayer + 40 * (indexPlayer)+10,
+    //     duration: Duration(milliseconds: 100),
+    //     curve: Curves.fastOutSlowIn,
+    //   );
+    // }
     // });
-
   }
 
   Widget _buildVideoPlaceholder(String cover) {
-    return Image.network(cover , fit: BoxFit.cover);
+    return Image.network(cover, fit: BoxFit.cover);
   }
-
-
 
   @override
   void dispose() {
     _freeController();
+    _tabController.dispose();
     super.dispose();
   }
 
+
+
+
+
+  Widget NewItemIndicator(BuildContext context) {
+    return Container(
+      height: 50,
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.only(right: 10),
+      color: Colors.redAccent,
+      child: Align(
+          alignment:Alignment.centerRight,child: Text(" ...در حال دریافت" ,style: TextStyle(color: Colors.white) ,textAlign: TextAlign.right,)),
+    );
+  }
 }
+

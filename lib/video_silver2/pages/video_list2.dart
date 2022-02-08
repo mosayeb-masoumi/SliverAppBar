@@ -1,4 +1,3 @@
-
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -7,28 +6,25 @@ import 'package:silver_app_bar1/video_silver2/model/video_model_item2.dart';
 import 'package:silver_app_bar1/video_silver2/pages/video_item2.dart';
 import 'package:silver_app_bar1/video_silver2/repository2/video_repository2.dart';
 
-
 class VideoList2 extends StatefulWidget {
   @override
   _VideoList2State createState() => _VideoList2State();
 }
 
 class _VideoList2State extends State<VideoList2> {
+  late BetterPlayerController betterPlayerController;
 
-
-  late BetterPlayerController betterPlayerController ;
   int indexPlayer = -1;
 
-
   // pagination
-  static const _pageSize = 8;
+  static const _pageSize = 3;
   final PagingController<int, VideoModelItem2> _pagingController =
-  PagingController(firstPageKey: 0);
+      PagingController(firstPageKey: 0);
 
   @override
   void initState() {
-
-    betterPlayerController = BetterPlayerController(BetterPlayerConfiguration());
+    betterPlayerController =
+        BetterPlayerController(BetterPlayerConfiguration());
 
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
@@ -110,14 +106,11 @@ class _VideoList2State extends State<VideoList2> {
                             Text("hdsfhuihkjhsdflkhaiuwerfi8wqeyhifhasifdhl")
                           ],
                         ),
-
                       ],
-
-
                     ),
                   ),
 
-                 //Images.network
+                  //Images.network
                 ),
 
                 bottom: PreferredSize(
@@ -138,25 +131,27 @@ class _VideoList2State extends State<VideoList2> {
               ),
             ];
           },
-
-
           body: TabBarView(
             children: [
-
               //first tab
               PagedListView<int, VideoModelItem2>.separated(
-
                 // physics:  AlwaysScrollableScrollPhysics(),
                 physics: NeverScrollableScrollPhysics(),
                 pagingController: _pagingController,
                 builderDelegate: PagedChildBuilderDelegate<VideoModelItem2>(
                   animateTransitions: true,
-                  itemBuilder: (context, videoListData, index) =>
-                      VideoItem2(videoListData: videoListData,),
+
+                  firstPageProgressIndicatorBuilder: (_) => firstPageIndicator(context),
+                  newPageProgressIndicatorBuilder: (_) => NewItemIndicator(context),
+                  noMoreItemsIndicatorBuilder: (_) => NoMoreItemIndicator(context),
+                  noItemsFoundIndicatorBuilder: (_) => noFirstItemsFoundIndicator(context) ,
+
+                  itemBuilder: (context, videoListData, index) => VideoItem2(
+                    videoListData: videoListData,
+                  ),
                 ),
                 separatorBuilder: (context, index) => const Divider(),
               ),
-
 
               // second tab
               Container(
@@ -172,6 +167,51 @@ class _VideoList2State extends State<VideoList2> {
     );
   }
 
+  Widget NewItemIndicator(BuildContext context) {
+    return Container(
+      height: 50,
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.only(right: 10),
+      color: Colors.redAccent,
+      child: Align(
+          alignment: Alignment.centerRight,
+          child: Text(
+            " ...در حال دریافت",
+            style: TextStyle(color: Colors.white),
+            textAlign: TextAlign.right,
+          )),
+    );
+  }
+
+  Widget NoMoreItemIndicator(BuildContext context) {
+    return Container(
+      height: 50,
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.only(right: 10),
+      color: Colors.redAccent,
+      child: Align(
+          alignment: Alignment.centerRight,
+          child: Text(
+            "!آیتم بیشتری برای نمایش وجود ندارد",
+            style: TextStyle(color: Colors.white),
+            textAlign: TextAlign.right,
+          )),
+    );
+  }
+
+  Widget firstPageIndicator(BuildContext context) {
+    return Center(
+        child: CircularProgressIndicator(
+      color: Colors.pink,
+    ));
+  }
+
+  Widget  noFirstItemsFoundIndicator(BuildContext context) {
+    return Center(
+        child: Text("آیتمی برای نمایش وجود ندارد" ,style: TextStyle(color: Colors.pink),)
+
+    );
+  }
 
 
 }

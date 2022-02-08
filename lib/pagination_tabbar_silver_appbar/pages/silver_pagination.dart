@@ -14,21 +14,7 @@ class SilverPagination extends StatefulWidget {
 }
 
 class _SilverPaginationState extends State<SilverPagination> {
-  // List<ModelInfo> list = [];
-  //
-  // bool showGridList = false;
 
-  // @override
-  // void initState() {
-  //   initialList();
-  //   super.initState();
-  // }
-  //
-  // void initialList() {
-  //   list.add(ModelInfo("ali", "rezai"));
-  //   list.add(ModelInfo("milad", "moradi"));
-  //   list.add(ModelInfo("mina", "akbari"));
-  //   list.add(ModelInfo("fiza", "leonardo"));
 
   // pagination
   static const _pageSize = 8;
@@ -222,4 +208,16 @@ class _SilverPaginationState extends State<SilverPagination> {
 //       ),
 //     );
 //   }
+// }
+
+//
+// class NewPageProgressIndicator extends StatelessWidget {
+//   const NewPageProgressIndicator({
+//     Key? key,
+//   }) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) => Scaffold(
+//     body: CircularProgressIndicator(color: Colors.pinkAccent,),
+//   );
 // }
